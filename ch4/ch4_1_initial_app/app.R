@@ -2,6 +2,10 @@ library(shiny)
 library(vroom)
 library(tidyverse)
 
+setwd("../..")
+injuries <- vroom::vroom("neiss/injuries.tsv.gz")
+products <- vroom::vroom("neiss/products.tsv")
+population <- vroom::vroom("neiss/population.tsv")
 prod_codes <- setNames(products$prod_code, products$title)
 
 ui <- fluidPage(
