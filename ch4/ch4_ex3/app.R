@@ -36,8 +36,8 @@ ui <- fluidPage(
     column(12, plotOutput("age_sex"))
   ),
   fluidRow(
-    column(2, actionButton("story", "Forward")),
-    column(3, actionButton("back", "Backward")),
+    column(2, actionButton("add1", "Forward")),
+    column(3, actionButton("subtract1", "Backward")),
     column(10, textOutput("narrative"))
   )
 )
@@ -50,6 +50,14 @@ server <- function(input, output, server) {
   output$body_part <- renderTable(count_top(selected(), body_part, input$n), width = "100%")
   
   output$location <- renderTable(count_top(selected(), location, input$n), width = "100%")
+  
+  counter <- reactiveValues(countervalue = 1) # Defining & initializing the reactiveValues object
+  observeEvent(input$add1, {
+  counter$countervalue <- counter$countervalue + 1   # if  the add button is clicked, increment the value by 1 and update it
+})
+  observeEvent(input$subtract1, {
+  counter$countervalue <- counter$countervalue - 1   # if  the subtract button is clicked, reduce the value by 1 and update it
+})
   
   summary <- reactive({
     selected() %>% 
@@ -72,12 +80,13 @@ server <- function(input, output, server) {
      }
   }, res = 96)
   
-  narrative_sample <- eventReactive(
-    list(input$story, selected()),
-    selected() %>% pull(narrative) %>% sample(1)
-  )
+  narrative_sample <- reactive({
+    selected()$narrative[counter$countervalue]
+      
+  })
   
   output$narrative <- renderText(narrative_sample())
+  
 
 }
 
