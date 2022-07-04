@@ -23,7 +23,9 @@ ui <- fluidPage(
                        choices = setNames(products$prod_code, products$title),
                        width = "100%")
            ),
-           column(2, selectInput("y", "Y axis", c("rate", "count")))
+           column(2, selectInput("y", "Y axis", c("rate", "count"))),
+           column(3, numericInput("n", "How many Rows?", value=5))
+    
   ),
   fluidRow(
     column(4, tableOutput("diag")),
@@ -34,7 +36,8 @@ ui <- fluidPage(
     column(12, plotOutput("age_sex"))
   ),
   fluidRow(
-    column(2, actionButton("story", "Tell me a story")),
+    column(2, actionButton("story", "Forward")),
+    column(3, actionButton("back", "Backward")),
     column(10, textOutput("narrative"))
   )
 )
@@ -42,11 +45,11 @@ ui <- fluidPage(
 server <- function(input, output, server) {
   selected <- reactive(injuries %>% filter(prod_code == input$code))
   
-  output$diag <- renderTable(count_top(selected(), diag), width = "100%")
+  output$diag <- renderTable(count_top(selected(), diag, input$n), width = "100%")
   
-  output$body_part <- renderTable(count_top(selected(), body_part), width = "100%")
+  output$body_part <- renderTable(count_top(selected(), body_part, input$n), width = "100%")
   
-  output$location <- renderTable(count_top(selected(), location), width = "100%")
+  output$location <- renderTable(count_top(selected(), location, input$n), width = "100%")
   
   summary <- reactive({
     selected() %>% 
