@@ -44,6 +44,7 @@ ui <- fluidPage(
 
 server <- function(input, output, server) {
   selected <- reactive(injuries %>% filter(prod_code == input$code))
+  narrative_len <- reactive(nrow(selected()))
   
   output$diag <- renderTable(count_top(selected(), diag, input$n), width = "100%")
   
@@ -53,12 +54,14 @@ server <- function(input, output, server) {
   
   counter <- reactiveValues(countervalue = 1) # Defining & initializing the reactiveValues object
   observeEvent(input$add1, {
-  counter$countervalue <- counter$countervalue + 1   # if  the add button is clicked, increment the value by 1 and update it
+  counter$countervalue <- if_else(counter$countervalue == narrative_len(), 1, counter$countervalue + 1)   # if  the add button is clicked, increment the value by 1 and update it
 })
   observeEvent(input$subtract1, {
-  counter$countervalue <- counter$countervalue - 1   # if  the subtract button is clicked, reduce the value by 1 and update it
+  end <- as.numeric(narrative_len())
+  counter$countervalue <- if_else(counter$countervalue == 1, end, counter$countervalue - 1)   # if  the subtract button is clicked, reduce the value by 1 and update it
 })
   
+
   summary <- reactive({
     selected() %>% 
       count(age, sex, wt = weight) %>% 
@@ -86,6 +89,7 @@ server <- function(input, output, server) {
   })
   
   output$narrative <- renderText(narrative_sample())
+
   
 
 }
