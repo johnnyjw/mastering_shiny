@@ -1,0 +1,12 @@
+name: test_pdil_jw
+title: test_pdil_jw
+username: whartoj2
+account: whartoj2
+server: connect.workbench.roche.com
+hostUrl: https://connect.workbench.roche.com/__api__
+appId: 2744
+bundleId: 35755
+url: https://connect.workbench.roche.com/content/b201ed38-26b8-4969-99b3-c1b5f8ca18d8/
+when: 1660911642.94288
+asMultiple: FALSE
+asStatic: FALSE

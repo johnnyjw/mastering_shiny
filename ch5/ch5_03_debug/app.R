@@ -1,3 +1,5 @@
+library(glue)
+
 ui <- fluidPage(
   sliderInput("x", "x", value = 1, min = 0, max = 10),
   sliderInput("y", "y", value = 2, min = 0, max = 10),
